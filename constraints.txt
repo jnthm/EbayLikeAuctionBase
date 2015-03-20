@@ -1,0 +1,88 @@
+1. No two users can share the same User ID:
+   ----------------------------------------
+	This is a KEY constraint in the UserInfo table.
+	create.sql contains the constraint implementation. 
+	UserID is declared as primary key.
+
+2. All sellers and bidders must already exist as users:
+   ---------------------------------------------------
+	This is a REFERENTIAL INTEGERITY constraint in the ItemInfo and BidderInfo tables.
+	create.sql contains the constraint implementation. 
+	SellerUserID and BidderUserID reference UserID in the UserInfo.
+
+3. No two items can share the same Item ID:
+   ----------------------------------------
+	This is a KEY constraint in the ItemInfo table.
+	create.sql contains the constraint implementation. 
+	ItemID is declared as primary key.
+
+4. Every bid must correspond to an actual item:
+   -------------------------------------------
+	This is a REFERENTIAL INTEGERITY constraint in the ItemCategory table.
+	create.sql contains the constraint implementation. 
+	ItemID in the ItemCategory table references to the ItemID in the ItemInfo table.
+
+5. The items for a given category must all exist:
+   ----------------------------------------------
+	This is a REFERENTIAL INTEGERITY constraint in the BidInfo and the BidderInfo table.
+	create.sql contains the constraint implementation. 
+	ItemID in both the BidInfo and the BidderInfo tables reference to the ItemID in the ItemInfo table.
+
+6. An item cannot belong to a particular category more than once:
+   --------------------------------------------------------------
+	This is a KEY constraint in the ItemCategory table.
+	create.sql contains the constraint implementation.
+	(ItemID, Category) is declared as unique key.
+
+7. The end time for an auction must always be after its start time:
+   ----------------------------------------------------------------
+	This is a CHECK constraint in the ItemInfo table.
+	create.sql contains the constraint implementation.
+	CHECK condition is on 'Started' and 'Ends'.
+
+8. The Current Price of an item must always match the Amount of the most recent bid for that item:
+   -----------------------------------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger8_add.sql, trigger8_drop.sql contain the constraint implementation.
+
+9. A user may not bid on an item he or she is also selling:
+   --------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger9_add.sql, trigger9_drop.sql contain the constraint implementation.
+
+10. No auction may have two bids at the exact same time:
+    ----------------------------------------------------
+	This is a KEY constraint in the BidderInfo table.
+	create.sql contains the constraint implementation.
+	(ItemID, Time) is declared as unique key.
+
+11. No auction may have a bid before its start time or after its end time:
+    ----------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger11_add.sql, trigger11_drop.sql contain the constraint implementation.
+
+12. No user can make a bid of the same amount to the same item more than once:
+    --------------------------------------------------------------------------
+	This is a KEY constraint in the BidderInfo table.
+	create.sql contains the constraint implementation.
+	(ItemID, Amount) is declared as unique key.
+
+13. In every auction, the Number of Bids attribute corresponds to the actual number of bids for that particular item:
+    -----------------------------------------------------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger13_add.sql, trigger13_drop.sql contain the constraint implementation.
+
+14. Any new bid for a particular item must have a higher amount than any of the previous bids for that particular item:
+    -------------------------------------------------------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger14_add.sql, trigger14_drop.sql contain the constraint implementation.
+
+15. All new bids must be placed at the time which matches the current time of your AuctionBase system:
+    --------------------------------------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger15_add.sql, trigger15_drop.sql contain the constraint implementation.
+
+16. The current time of your AuctionBase system can only advance forward in time, not backward in time:
+    ---------------------------------------------------------------------------------------------------
+	This is a TRIGGER constraint.
+	trigger16_add.sql, trigger16_drop.sql contain the constraint implementation.

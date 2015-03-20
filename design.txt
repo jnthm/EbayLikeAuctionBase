@@ -1,0 +1,77 @@
+given schema with all the attributes:
+-------------------------------------
+
+Other(ItemID, Name, Category, Currently, BuyPrice, FirstBid, NumberOfBids, Bids-details, 
+Location, Country, Started, Ends, Seller-details, Description)
+
+Bids-details and Seller-details represent all the information related to Bids and 
+the user selling the item respectively.
+
+Following are the functional dependencies in the schema:
+ItemID -> Name, Description, SellerUserID, Started, Ends, BuyPrice, FirstBid, 
+ItemID -> Currently, Number_of_Bids
+UserID -> Location, Country, Rating
+
+Following are the multi-valiued dependencies in the schema:
+ItemID ->> Category
+ItemID ->> BidderUserID, Time, Amount
+
+=============
+Decomposition:
+=============
+
+Step1:
+-----
+Since ItemID is MVD on Category, we need to separate out the Category attribute 
+from the big table; otherwise, we repeat the information of other attributes 
+in the table.
+
+Applying "ItemID ->> Category" for decomposition,
+
+ItemCategory(ItemID, Category)
+Other(ItemID, Name, Currently, BuyPrice, FirstBid, NumberOfBids, Bids-details, 
+Location, Country, Rating, Started, Ends, Seller-details, Description)
+
+Step2:
+-----
+
+Seller-details contain all the information of the user. Multiple items can 
+have the same seller. Therefore, we repeat the seller information if the same 
+seller sells multiple items.
+
+Applying "UserID -> Location, Country, Rating" for decomposition,
+
+ItemCategory(ItemID, Category)
+UserInfo(UserID, Location, Country, Rating)
+Other(ItemID, Name, Currently, BuyPrice, FirstBid, NumberOfBids, Bids-details, 
+Started, Ends, SellerUserID, Description)
+
+Step3:
+-----
+An item can have multiple bids. In this case, the 'Bids-details' will make the 
+rest of the information in the 'Other' table repeated. So, the details of 
+the bids needs to be sepearated out.
+
+Applying "ItemID ->> BidderUserID, Time, Amount" for decomposition,
+
+ItemCategory(ItemID, Category)
+UserInfo(UserID, Location, Country, Rating)
+BidderInfo(ItemID, BidderUserID, Time, Amount)
+ItemInfo(ItemID, Name, Currently, BuyPrice, FirstBid, NumberOfBids, Started, Ends, SellerUserID, Description)
+
+Step4:
+-----
+There is an update anomoly inside the ItemInfo table. When a bid information is added, 
+the 'Currently' and the 'NumberOfBids' are updated but not the other values.
+So, I felt it is inefficient to touch the ItemInfo table (which is the largest), 
+and so separated out the 'Currently' and the 'NumberOfBids' information into a 
+different table.
+
+FINAL TABLE:
+
+ItemCategory(ItemID, Category)
+UserInfo(UserID, Location, Country, Rating)
+BiddInfo(ItemID, Currently, NumberOfBids)
+BidderInfo(ItemID, BidderUserID, Time, Amount)
+ItemInfo(ItemID, Name, BuyPrice, FirstBid, Started, Ends, SellerUserID, Description)
+

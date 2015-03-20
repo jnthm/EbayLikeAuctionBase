@@ -1,0 +1,5 @@
+{% extends "app_base.html" %}
+{% block content %}
+<h3> Search </h3> 
+
+<form method="POST" action="search" role="form" style="max-width:400px; width:100%">

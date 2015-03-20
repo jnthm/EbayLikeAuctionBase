@@ -1,0 +1,11 @@
+.separator <>
+.import ItemCategory.Dat ItemCategory
+.import ItemInfo.Dat ItemInfo
+update ItemInfo set BuyPrice = null where BuyPrice = 'NULL';
+update ItemInfo set Description = null where Description = 'NULL';
+.import BidInfo.Dat BidInfo
+.import BidderInfo.Dat BidderInfo
+.import UserInfo.Dat UserInfo
+update UserInfo set Location = null where Location = 'NULL';
+update UserInfo set Country = null where Country = 'NULL';
+
